@@ -1,8 +1,5 @@
 { "dependencies" :
-  { "express" : "latest"
-  , "method-override" : "latest"
-  , "querystring" : "latest"
-  , "ps-node" : "latest"
+  { "ps-node" : "latest"
   , "url" : "latest"
   , "mqtt": "~1.10.0"
   , "util": "latest"

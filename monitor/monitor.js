@@ -1,13 +1,5 @@
-var http = require('http'), express = require('express');
-var methodOverride = require('method-override');
-var querystring = require('querystring');
-var ps = require('ps-node'), util = require('util');
 var mqtt = require('mqtt'), url = require('url');
-
-var port = process.env.PORT || 80;
-var app = express();
-app.use(methodOverride());
-app.use(express.static(__dirname + '/public'));
+var ps = require('ps-node'), util = require('util');
 
 /* Global Params. */
 var connectedToBroker = false;
@@ -16,17 +8,12 @@ var brokerTotalClients = -1;
 var brokerBytesSent = -1;
 var brokerBytesRecv = -1;
 
-/* Start HTTP Server */
-var server = http.createServer(app).listen(port, function() {
-    console.log("HTTP Server listening to %d within %s environment",
-          port, app.get('env'));
-});
-
 var mqtt_client = mqtt.connect('mqtt://vestelmqtt.xyz:1883');
 
-//console.log(util.inspect(mqtt_client, false, null))
+//console.log(util.inspect(mqtt_client, false, null));
 
 mqtt_client.on('connect', function() {
+    console.log("Connected to MQTT broker.");
     connectedToBroker = true;
     mqtt_client.subscribe('$SYS/broker/bytes/sent');
     mqtt_client.subscribe('$SYS/broker/bytes/received');
@@ -57,23 +44,21 @@ mqtt_client.on('message', function(topic, message, packet) {
     }
 });
 
-app.all('/*', function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "X-Requested-With");
-  next();
-});
-
-app.get('/', function(req, res){
-    //console.log("Broker PID : " + brokerPID);
+exports.monitorResult = function()
+{
+    var retval = null;
     if(connectedToBroker == true){
-        res.send("System status : UP. <br>Process ID: " + brokerPID + "<br>Bytes Sent: " + brokerBytesSent + "<br>Bytes Recv: " + brokerBytesRecv + "<br>Total Clients: " + brokerTotalClients);
+         retval = "System status : UP. <br>Process ID: " + brokerPID + "<br>Bytes Sent: " + brokerBytesSent + "<br>Bytes Recv: " + brokerBytesRecv + "<br>Total Clients: " + brokerTotalClients;
     }
     else{
-        res.send("System status : DOWN!");
+        retval = "System status : DOWN!";
     }
-});
 
-function pollBroker(){
+    return retval;
+}
+
+function pollBroker()
+{
     ps.lookup({
         command: 'mosquitto',
         psargs: 'aux',

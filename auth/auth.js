@@ -22,7 +22,7 @@ var ACL = bookshelf.Model.extend({
     tableName: 'acls'
 });
 
-function addMosquittoUser(username_, pw_)
+exports.addMosquittoUser = function(username_, pw_)
 {
     User.forge(
         {username : username_, pw : ConvertToPBKDF2(pw_)}
@@ -35,7 +35,7 @@ function addMosquittoUser(username_, pw_)
     });
 }
 
-function addMosquittoTopic(username_, topic_, permission_)
+exports.addMosquittoTopic = function (username_, topic_, permission_)
 {
     ACL.forge(
         {username : username_, topic : topic_, rw : permission_}

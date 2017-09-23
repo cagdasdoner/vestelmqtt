@@ -1,0 +1,8 @@
+{ "dependencies" :
+    { "express" : "latest"
+    , "method-override" : "latest"
+    , "querystring" : "latest"
+    , "url" : "latest"
+    , "util": "latest"
+    }
+  }
