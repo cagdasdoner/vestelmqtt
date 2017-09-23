@@ -1,0 +1,8 @@
+{ "dependencies" :
+  { "mysql": "latest"
+  , "knex": "0.13"
+  , "bookshelf": "latest"
+  , "pbkdf2": "latest"
+  , "crypto": "latest"
+  }
+}
